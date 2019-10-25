@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link href="/index.css" rel="stylesheet" type="text/css" media="all" />
+    <title>GunDB - Simple</title>
+  </head>
+  <body>
+    <h1>Todo</h1>
+
+    <form>
+      <input />
+      <button>Add</button>
+    </form>
+
+    <ul></ul>
+
+    <script src="https://cdn.jsdelivr.net/npm/gun/examples/jquery.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/gun/sea.js"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/gun/lib/webrtc.js"></script> -->
+    <script>
+      /** add your gundb host here */
+      var gun = Gun([
+        "http://seorangeksa.com:8765/gun"
+        // "https://gunjs.herokuapp.com/gun"
+      ]);
+      var items = gun.get("items");
+
+      $("form").on("submit", function(e) {
+        e.preventDefault();
+        items.set($("input").val());
+        $("input").val("");
+      });
+
+      items.map().on(function(item, id) {
+        var li =
+          $("#" + id).get(0) ||
+          $("<li>")
+            .attr("id", id)
+            .appendTo("ul");
+        if (item) {
+          $(li).text(item);
+        } else {
+          $(li).hide();
+        }
+      });
+
+      $("body").on("dblclick", "li", function(e) {
+        items.get(this.id).put(null);
+      });
+    </script>
+  </body>
+</html>
